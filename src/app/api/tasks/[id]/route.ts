@@ -4,13 +4,14 @@ import Task from '@/models/Task';
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await dbConnect();
     const { status } = await req.json();
     const task = await Task.findByIdAndUpdate(
-      params.id,
+      id,
       { status },
       { new: true, runValidators: true }
     );
@@ -25,11 +26,12 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await dbConnect();
-    const task = await Task.findByIdAndDelete(params.id);
+    const task = await Task.findByIdAndDelete(id);
     if (!task) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }

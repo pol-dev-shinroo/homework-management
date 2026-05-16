@@ -26,6 +26,12 @@ describe('StudentDashboardPage', () => {
           json: () => Promise.resolve(mockTasks),
         });
       }
+      if (url === '/api/student/progress') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ coins: 0 }),
+        });
+      }
       if (url.startsWith('/api/tasks/')) {
         return Promise.resolve({
           ok: true,

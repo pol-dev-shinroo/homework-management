@@ -11,8 +11,8 @@ export async function GET() {
       student = await User.create({
         name: 'Student',
         role: 'student',
-        coins: 100,
-        coupons: 2
+        coins: 0,
+        coupons: 0
       });
     }
     

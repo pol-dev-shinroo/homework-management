@@ -21,6 +21,18 @@ export default function StudentDashboardPage() {
 
   const [weeklyTasks, setWeeklyTasks] = useState<any[]>([]);
   const [dailyQuests, setDailyQuests] = useState<any[]>([]);
+  const [coins, setCoins] = useState(0);
+
+  const fetchProgress = async () => {
+    try {
+      const res = await fetch('/api/student/progress');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch progress');
+      setCoins(data.coins || 0);
+    } catch (error) {
+      console.error('Error fetching progress:', error);
+    }
+  };
 
   const fetchTasks = async () => {
     try {
@@ -55,6 +67,7 @@ export default function StudentDashboardPage() {
 
   useEffect(() => {
     fetchTasks();
+    fetchProgress();
   }, []);
 
   const updateTaskStatus = async (taskId: string, newStatus: string) => {
@@ -142,7 +155,7 @@ export default function StudentDashboardPage() {
             </div>
             <div>
               <p className="text-sm text-yellow-800 font-bold uppercase tracking-wider">Your Coins</p>
-              <p className="text-3xl font-black text-amber-700">1</p>
+              <p className="text-3xl font-black text-amber-700">{coins}</p>
             </div>
           </div>
         </div>
