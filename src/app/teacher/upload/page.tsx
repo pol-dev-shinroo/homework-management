@@ -216,7 +216,7 @@ export default function ManualHomeworkEntryPage() {
                   {dailyItems.map(item => (
                     <div key={item.id} className="flex items-center justify-between p-4 rounded-2xl bg-indigo-50/50 group">
                       <div>
-                        <span className="text-xs font-black text-indigo-500 uppercase tracking-wider block mb-1 bg-indigo-100 w-fit px-2 py-0.5 rounded-md">{item.date}</span>
+                        <span className="text-xs font-black text-indigo-500 uppercase tracking-wider block mb-1 bg-indigo-100 w-fit px-2 py-0.5 rounded-md">{formatDatePickerString(item.date)}</span>
                         <p className="font-bold text-slate-700 text-lg">{item.title}</p>
                       </div>
                       <button onClick={() => setHomeworkItems(homeworkItems.filter(i => i.id !== item.id))} className="text-red-400 hover:text-red-600 font-bold text-sm bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-100">Remove</button>
@@ -248,6 +248,18 @@ export default function ManualHomeworkEntryPage() {
                         <p className="font-bold text-slate-700 text-lg">{item.title}</p>
                       </div>
                       <button onClick={() => setHomeworkItems(homeworkItems.filter(i => i.id !== item.id))} className="text-red-400 hover:text-red-600 font-bold text-sm bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-100">Remove</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+ px-3 py-1.5 rounded-lg shadow-sm border border-slate-100">Remove</button>
                     </div>
                   ))}
                 </div>

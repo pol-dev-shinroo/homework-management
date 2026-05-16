@@ -23,6 +23,8 @@ export default function StudentDashboardPage() {
   const [dailyQuests, setDailyQuests] = useState<any[]>([]);
   const [coins, setCoins] = useState(0);
 
+  const formatTaskDate = (dateStr: string) => { if (!dateStr || dateStr === 'Today') return dateStr; const [year, month, day] = dateStr.split('-').map(Number); if (isNaN(year) || isNaN(month) || isNaN(day)) return dateStr; return new Date(year, month - 1, day).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' }); };
+
   const fetchProgress = async () => {
     try {
       const res = await fetch('/api/student/progress');
@@ -190,7 +192,7 @@ export default function StudentDashboardPage() {
                   {dailyQuests.map((day, dIdx) => (
                     <div key={dIdx} className="space-y-2">
                       <div className="inline-block bg-indigo-100 text-indigo-800 font-black px-5 py-2 rounded-full mt-4 mb-2 text-xs uppercase tracking-wider">
-                        {day.date}
+                        {formatTaskDate(day.date)}
                       </div>
                       {day.tasks.map((task: any) => (
                         <div key={task._id} className="grid grid-cols-12 items-center gap-4 p-4 rounded-2xl hover:bg-indigo-50/30 transition-colors group">
