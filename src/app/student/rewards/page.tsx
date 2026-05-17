@@ -15,7 +15,6 @@ import {
   HelpCircle
 } from 'lucide-react';
 
-const COINS_NEEDED_FOR_COUPON = 100;
 const COUPONS_NEEDED_FOR_REWARD = 3;
 
 export default function RewardShopPage() {
@@ -25,25 +24,28 @@ export default function RewardShopPage() {
   const [coins, setCoins] = useState(0);
   const [coupons, setCoupons] = useState(0);
   const [showCouponModal, setShowCouponModal] = useState(false);
+  const [coinsNeeded, setCoinsNeeded] = useState(1);
 
-  const fetchProgress = async () => {
+  const fetchData = async () => {
     try {
-      const res = await fetch('/api/student/progress');
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to fetch progress');
-      setCoins(data.coins || 0);
-      setCoupons(data.coupons || 0);
-      
-      if (data.coins >= COINS_NEEDED_FOR_COUPON) {
+      const resTasks = await fetch('/api/tasks');
+      const taskData = await resTasks.json();
+      const totalTasks = Math.max(1, taskData.length);
+      setCoinsNeeded(totalTasks);
+      const resProg = await fetch('/api/student/progress');
+      const progData = await resProg.json();
+      setCoins(progData.coins || 0);
+      setCoupons(progData.coupons || 0);
+      if ((progData.coins || 0) >= totalTasks && totalTasks > 1) {
         setShowCouponModal(true);
       }
     } catch (error) {
-      console.error('Error fetching progress:', error);
+      console.error('Error fetching data:', error);
     }
   };
 
   useEffect(() => {
-    fetchProgress();
+    fetchData();
   }, []);
 
   const handleTradeCoins = async () => {
@@ -52,12 +54,12 @@ export default function RewardShopPage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          coins: Math.max(0, coins - COINS_NEEDED_FOR_COUPON),
+          coins: Math.max(0, coins - coinsNeeded),
           coupons: coupons + 1
         })
       });
       setShowCouponModal(false);
-      fetchProgress();
+      fetchData();
     } catch (error) {
       console.error('Error trading coins:', error);
     }
@@ -74,7 +76,7 @@ export default function RewardShopPage() {
           })
         });
         alert(`🎉 Reward Claimed: ${rewardTitle}!`);
-        fetchProgress();
+        fetchData();
       } catch (error) {
         console.error('Error claiming reward:', error);
       }
@@ -122,12 +124,12 @@ export default function RewardShopPage() {
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-bold text-indigo-400 uppercase tracking-wider">
                 <span>Progress to Coupon</span>
-                <span>{coins}/{COINS_NEEDED_FOR_COUPON}</span>
+                <span>{coins}/{coinsNeeded}</span>
               </div>
               <div className="h-4 bg-indigo-50 rounded-full overflow-hidden border-2 border-indigo-50">
                 <div 
                   className="h-full bg-yellow-400 rounded-full transition-all duration-500 shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]"
-                  style={{ width: `${Math.min((coins / COINS_NEEDED_FOR_COUPON) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((coins / coinsNeeded) * 100, 100)}%` }}
                 />
               </div>
             </div>

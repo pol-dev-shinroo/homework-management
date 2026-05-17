@@ -41,7 +41,7 @@ export default function TeacherDashboardPage() {
       await fetch('/api/student/progress', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coins: (student.coins || 0) + 20 })
+        body: JSON.stringify({ coins: (student.coins || 0) + 1 })
       });
 
       fetchPending();
